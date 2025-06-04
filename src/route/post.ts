@@ -17,6 +17,15 @@ route.post("/api/post", async (req, res) => {
   }
 });
 
+route.get("/api/post/all", async (req, res) => {
+  try {
+    const [rows] = await db.query<Post[]>("SELECT * FROM post");
+    res.status(200).json(rows);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 route.get("/api/post/timeline/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -76,7 +85,7 @@ route.post("/api/post/likes/:postId", async (req, res) => {
       [userId, postId]
     );
     isLiked = results.length > 0;
-    res.status(200).json({sum: countRow.sum, isLiked})
+    res.status(200).json({ sum: countRow.sum, isLiked });
   } catch (err) {
     res.status(500).json(err);
   }
